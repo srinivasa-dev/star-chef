@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 class AppColors {
   static const Color white = Colors.white;
   static const Color background = Colors.white;
+  static const Color greyBackground = Color(0xffF5F5F5);
   static const Color textTitle = Color(0xff242424);
   static const Color textBody1 = Color(0xff1C1C1C);
   static const Color textBody2 = Color(0xff707070);
+  static const Color textBody3 = Color(0xffA3A3A3);
   static const Color textDisabled = Color(0xff8A8A8A);
   static const Color primary = Color(0xffFF941A);
   static const Color lightOrange = Color(0xffFFF9F2);

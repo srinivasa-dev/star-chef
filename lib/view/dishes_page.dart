@@ -121,7 +121,7 @@ class _DishesPageState extends State<DishesPage> {
           ),
         ),
       ),
-      body: BlocConsumer(
+      body: BlocConsumer<AllDetailsBloc, AllDetailsState>(
         bloc: _allDetailsBloc,
         builder: (context, state) {
           return SingleChildScrollView(
@@ -183,29 +183,19 @@ class _DishesPageState extends State<DishesPage> {
     );
   }
 
-  Padding buildRecommended(BuildContext context) {
+  Widget buildRecommended(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 23.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Recommended',
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(width: 10.0,),
-              Image.asset(
-                'assets/images/2x/Path 786@2x.png',
-                height: 7.0,
-              ),
-              const Spacer(),
-              SizedBox(
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              initiallyExpanded: true,
+              childrenPadding: EdgeInsets.zero,
+              tilePadding: EdgeInsets.zero,
+              trailing: SizedBox(
                 height: 28.0,
                 child: ElevatedButton(
                   onPressed: () {},
@@ -226,205 +216,224 @@ class _DishesPageState extends State<DishesPage> {
                   ),
                 ),
               ),
-            ],
-          ),
-          _loading ? const RecommendedListShimmer() : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(_allDetailsModel.dishes!.length, (index) {
-              return Container(
-                padding: const EdgeInsets.only(top: 22.0, bottom: 20.0),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: AppColors.dividerSmall,
-                      width: 0.7,
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Recommended',
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              _allDetailsModel.dishes![index].name!,
-                              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(width: 6.0,),
-                            Image.asset(
-                              'assets/images/2x/Group 359@2x.png',
-                              height: 10.0,
-                            ),
-                            const SizedBox(width: 10.0,),
-                            Ratings(starCount: _allDetailsModel.dishes![index].rating!.toString()),
-                          ],
+                  const SizedBox(width: 10.0,),
+                  Image.asset(
+                    'assets/images/2x/Path 786@2x.png',
+                    height: 7.0,
+                  ),
+                ],
+              ),
+              children: [
+                _loading ? const RecommendedListShimmer() : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(_allDetailsModel.dishes!.length, (index) {
+                    return Container(
+                      padding: const EdgeInsets.only(top: 22.0, bottom: 20.0),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: AppColors.dividerSmall,
+                            width: 0.7,
+                          ),
                         ),
-                        const SizedBox(height: 8.0,),
-                        Row(
-                          children: [
-                            Container(
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  right: BorderSide(
-                                    width: 0.5,
-                                    color: AppColors.dividerSmall,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _allDetailsModel.dishes![index].name!,
+                                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6.0,),
+                                  Image.asset(
+                                    'assets/images/2x/Group 359@2x.png',
+                                    height: 10.0,
+                                  ),
+                                  const SizedBox(width: 10.0,),
+                                  Ratings(starCount: _allDetailsModel.dishes![index].rating!.toString()),
+                                ],
+                              ),
+                              const SizedBox(height: 8.0,),
+                              Row(
+                                children: [
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        right: BorderSide(
+                                          width: 0.5,
+                                          color: AppColors.dividerSmall,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: List.generate(_allDetailsModel.dishes![index].equipments!.length, (ind) {
+                                        return Container(
+                                          margin: const EdgeInsets.only(right: 8.5),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Image.asset(
+                                                _allDetailsModel.dishes![index].equipments![ind] == 'Microwave'
+                                                    ? 'assets/images/1x/microwave.png' : 'assets/images/2x/Group 508@2x.png',
+                                                height: 15.0,
+                                              ),
+                                              const SizedBox(height: 2.0,),
+                                              Text(
+                                                _allDetailsModel.dishes![index].equipments![ind],
+                                                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                                  fontSize: 6.0,
+                                                  height: 0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 15.5,),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => const IngredientsPage()));
+                                    },
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Ingredients',
+                                            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'View list ',
+                                                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                                  color: AppColors.textOrange,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              const Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: AppColors.textOrange,
+                                                size: 7.0,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8.0,),
+                              SizedBox(
+                                width: 230.0,
+                                child: Text(
+                                  _allDetailsModel.dishes![index].description!,
+                                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: AppColors.textBody2,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 10.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: Container(
+                                    height: 68.0,
+                                    width: 94.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    child: Image.network(
+                                      _allDetailsModel.dishes![index].image!,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
-                              child: Row(
-                                children: List.generate(_allDetailsModel.dishes![index].equipments!.length, (ind) {
-                                  return Container(
-                                    margin: const EdgeInsets.only(right: 8.5),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Image.asset(
-                                          _allDetailsModel.dishes![index].equipments![ind] == 'Microwave'
-                                              ? 'assets/images/1x/microwave.png' : 'assets/images/2x/Group 508@2x.png',
-                                          height: 15.0,
+                              Positioned(
+                                bottom: 0,
+                                child: SizedBox(
+                                  height: 25.0,
+                                  child: Stack(
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {},
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all<Color?>(AppColors.background),
+                                          shadowColor: MaterialStateProperty.all<Color?>(AppColors.buttonShadow),
+                                          shape: MaterialStateProperty.all<OutlinedBorder?>(RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(3.0),
+                                            side: const BorderSide(
+                                              color: AppColors.btnBorderOrange,
+                                              width: 0.5,
+                                            ),
+                                          ),),
+                                          elevation: MaterialStateProperty.all<double?>(5),
+                                          padding: MaterialStateProperty.all<EdgeInsetsGeometry?>(const EdgeInsets.symmetric(horizontal: 19.0, vertical: 0)),
                                         ),
-                                        const SizedBox(height: 2.0,),
-                                        Text(
-                                          _allDetailsModel.dishes![index].equipments![ind],
-                                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                            fontSize: 6.0,
-                                            height: 0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ),
-                            const SizedBox(width: 15.5,),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const IngredientsPage()));
-                              },
-                              child: Container(
-                                color: Colors.transparent,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Ingredients',
-                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'View list ',
-                                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                        child: Text(
+                                          'Add',
+                                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                             color: AppColors.textOrange,
                                             fontWeight: FontWeight.w600,
+                                            fontSize: 15.0,
                                           ),
                                         ),
-                                        const Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: AppColors.textOrange,
-                                          size: 7.0,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8.0,),
-                        SizedBox(
-                          width: 230.0,
-                          child: Text(
-                            _allDetailsModel.dishes![index].description!,
-                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: AppColors.textBody2,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 10.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: Container(
-                              height: 68.0,
-                              width: 94.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Image.network(
-                                _allDetailsModel.dishes![index].image!,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          child: SizedBox(
-                            height: 25.0,
-                            child: Stack(
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all<Color?>(AppColors.background),
-                                    shadowColor: MaterialStateProperty.all<Color?>(AppColors.buttonShadow),
-                                    shape: MaterialStateProperty.all<OutlinedBorder?>(RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(3.0),
-                                      side: const BorderSide(
-                                        color: AppColors.btnBorderOrange,
-                                        width: 0.5,
                                       ),
-                                    ),),
-                                    elevation: MaterialStateProperty.all<double?>(5),
-                                    padding: MaterialStateProperty.all<EdgeInsetsGeometry?>(const EdgeInsets.symmetric(horizontal: 19.0, vertical: 0)),
-                                  ),
-                                  child: Text(
-                                    'Add',
-                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                      color: AppColors.textOrange,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15.0,
-                                    ),
-                                  ),
-                                ),
-                                const Positioned(
-                                  top: 2,
-                                  right: 4,
-                                  child: Icon(
-                                    Icons.add,
-                                    color: AppColors.textOrange,
-                                    size: 10.0,
+                                      const Positioned(
+                                        top: 2,
+                                        right: 4,
+                                        child: Icon(
+                                          Icons.add,
+                                          color: AppColors.textOrange,
+                                          size: 10.0,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            }),
+                        ],
+                      ),
+                    );
+                  }),
+                )
+              ],
+            ),
           ),
         ],
       ),
@@ -531,6 +540,7 @@ class _DishesPageState extends State<DishesPage> {
       height: 68.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
         itemCount: _allDetailsModel.popularDishes!.length,
         padding: const EdgeInsets.only(left: 23.0),
         itemBuilder: (context, index) {
